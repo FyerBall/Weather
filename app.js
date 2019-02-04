@@ -1,81 +1,79 @@
-// Getting location from the broswer
-window.addEventListener('load', () => {
-    let long;
-    let lat;
-    let tempDescription = document.querySelector('.temp-description');
-    let tempDegree = document.querySelector('.temp-degree');
-    let locationTimezone = document.querySelector('.location-timezone');
-    let degree = document.querySelector('.degree');
-    let degreeSpan = document.querySelector('.degree span');
+//Get the location of the device
+function place() {
+  let long;
+  let lat;
+  let search;
 
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      long = position.coords.longitude;
+      lat = position.coords.latitude;
 
-    
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            long = position.coords.longitude;
-            lat = position.coords.latitude;
-            
-            //Dark sky api doesn't allow to access the api from a local host
-            // to work around, you have to use a proxy 
-            const proxy = 'https://cors-anywhere.herokuapp.com/';
-            const api = `${proxy}https://api.darksky.net/forecast/46be7b311c7390f8f3da28513525abed/${lat},${long}`;
-            
-            //Getting the data
-            fetch(api)
-            .then(response => {
-                // returning the data as a JSON
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                
-                // Set DOM elements from darksky api
-                const temp = data.currently.temperature;
-                tempDescription.innerHTML = data.currently.summary;
-                // tempDegree.textContent = data.currently.temperature;
-                tempDegree.textContent = temp;
-                icon = data.currently.icon;
-                locationTimezone.innerHTML = data.timezone;
-
-                // C degree is 
-                let cDegree = (temp - 32) * (5/9);
-
-                //Setting the icon
-                setIcon(icon, document.querySelector('.icon'));
-
-                // Convert F to C
-                degree.addEventListener('click', () => {
-                    if(degreeSpan.textContent === 'F') {
-                        degreeSpan.textContent = 'C';
-                        tempDegree.textContent = Math.floor(cDegree);
-                    } else {
-                        degreeSpan.textContent = 'F';
-                        tempDegree.textContent = temp;
-                    }
-                });
-                
-            });
+      //   const api = `${proxy}https://api.darksky.net/forecast/46be7b311c7390f8f3da28513525abed/${lat},${long}`;
+      const api = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=a339e025a95d6f5ed4cb3251bcfd566d&units=imperial`;
+      // Fetching the data from the api
+      fetch(api)
+        .then(data => {
+          // Converting the data to JSON
+          return data.json();
+        })
+        .then(data => {
+          console.log(data);
+          // Call a fun
+          results(data);
         });
-        
+    });
+  } else {
+    alert("Geolocation is not supported by this browser");
+  }
+
+  function results(data) {
+    // Change BG
+    switch (data.weather[0].main) {
+      case "Thunderstorm":
+        document.getElementById("myDiv").style.backgroundImage =
+          "url('Thunderstorm.jpg')";
+        break;
+
+      case "Drizzle":
+      case "Rain":
+        document.getElementById("myDiv").style.backgroundImage =
+          "url('Rain.jpeg')";
+        break;
+
+      case "Snow":
+        document.getElementById("myDiv").style.backgroundImage =
+          "url('Snow.jpg')";
+        break;
+
+      case "Clouds":
+        document.getElementById("myDiv").style.backgroundImage =
+          "url('Cloudy.jpg')";
+        break;
+
+      case "Clear":
+        document.getElementById("myDiv").style.backgroundImage =
+          "url('Clear.jpeg')";
+        break;
+
+      default:
+        break;
     }
-    // Using skycons for the icons 
-    function setIcon(icon, iconID){
-        const skycons = new Skycons({"color": "white"});
-        // skycons icons use _ and darksky use - => ex: "partly-cloudy-night"
-        // We need to replace - to _
-        // Skycons are upper case and we have to convert ours to uppercases too for the icons to work
-        const currentIcon = icon.replace(/-/g, "_").toUpperCase(); 
-        // To animate the icon we have to use .play() method
-        skycons.play();
-        // Want to change the icon? no problem!
-        return skycons.set(iconID, Skycons[currentIcon]);
+    console.log(`Weather is ${data.weather[0].main}`);
 
+    let city = document.getElementById("city");
+    let weatherDescription = document.getElementsByClassName(
+      ".weatherDescription"
+    );
+    let tempDegree = document.getElementById("degree");
+    let sunrise = document.getElementsByClassName(".sunrise");
+    let sunset = document.getElementsByClassName(".sunset");
+    let sunriseTime = document.getElementsByClassName(".sunriseTime");
+    let sunsetTime = document.getElementsByClassName(".sunsetTime");
 
-    }
+    city.innerHTML = data.name;
+    tempDegree.innerHTML = Math.floor(data.main.temp) + "&#176"; //"&#176" temp symbol
+  }
+}
 
-})
-
-
-
-
-//https://api.darksky.net/forecast/46be7b311c7390f8f3da28513525abed/37.8267,-122.4233
+place();
