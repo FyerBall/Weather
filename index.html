@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Weather</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
 
-  <body>
-    <div class="search">
-      <input type="text" placeholder="City, zip" />
-      <button type="submit">Search</button>
-    </div>
-    <div class="weatherContainer" id="myDiv">
-      <div class="location">
-        <h2 class="city" id="city">New Work</h2>
-        <p class="weatherDescription" id="weatherDescription">Description</p>
-      </div>
-      <div class="tempDegree" id="degree">
-        <!-- 0 -->
-        <!-- <span class="degree">F</span> -->
-      </div>
-    </div>
-    <div class="sunContainer" id="sunContainer">
-      <h3 class="sunrise">Sunrise</h3>
-      <h3 class="sunset">Sunset</h3>
-      <div class="time">
-        <h3 class="sunriseTime">1485762037</h3>
-        <h3 class="sunsetTime">1485762037</h3>
-      </div>
-    </div>
+<head>
+  <title>Weather</title>
+  <!-- Style Sheet -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
 
-    <script src="app.js"></script>
-  </body>
+<body>
+  <div class="search">
+    <input type="text" placeholder="Enter City" class="search__input" id="search_input" />
+    <button type="submit" class="search__btn">Search</button>
+  </div>
+  <div class="weather" id="weather">
+    <div class="weather__location">
+      <h2 class="weather__city" id="city">City</h2>
+      <p class="weather__description" id="weatherDescription">Description</p>
+    </div>
+    <div class="weather__temp">
+      <span class="weather__temp--degree" id="degree">0</span>
+      <span class="weather__temp--symbol">F</span>
+    </div>
+  </div>
+  <div class="temp" id="temp">
+    <p class="temp__min">Low <span class="temp__low">0</span>
+    </p>
+    <p class="temp__max">Hight <span class="temp__high">0</span>
+    </p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
 </html>
